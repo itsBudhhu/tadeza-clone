@@ -46,38 +46,6 @@ def inlinequery(update: Update, _) -> None:
     user = update.effective_user
 
     results: List = []
-    inline_help_dicts = [
-        {
-            "title": "SpamProtection INFO",
-            "description": "Look up a person/bot/channel/chat on @Intellivoid SpamProtection API",
-            "message_text": "Click the button below to look up a person/bot/channel/chat on @Intellivoid SpamProtection API using "
-                            "username or telegram id",
-            "thumb_urL": "https://telegra.ph/file/3ce9045b1c7faf7123c67.jpg",
-            "keyboard": ".spb ",
-        },
-        {
-            "title": "Account info on Tedeza",
-            "description": "Look up a Telegram account in Tedeza database",
-            "message_text": "Click the button below to look up a person in Tedeza database using their Telegram ID",
-            "thumb_urL": "https://telegra.ph/file/fdcf54623b142ac333217.jpg",
-            "keyboard": ".info ",
-        },
-        {
-            "title": "About",
-            "description": "Know about Tedeza",
-            "message_text": "Click the button below to get to know about Tedeza.",
-            "thumb_urL": "https://telegra.ph/file/fdcf54623b142ac333217.jpg",
-            "keyboard": ".about ",
-        },
-        {
-            "title": "Anilist",
-            "description": "Search anime and manga on AniList.co",
-            "message_text": "Click the button below to search anime and manga on AniList.co",
-            "thumb_urL": "https://telegra.ph/file/fdcf54623b142ac333217.jpg",
-            "keyboard": ".anilist ",
-        },
-    ]
-
     inline_funcs = {
         ".spb": spb,
         ".info": inlineinfo,
@@ -88,6 +56,38 @@ def inlinequery(update: Update, _) -> None:
     if (f := query.split(" ", 1)[0]) in inline_funcs:
         inline_funcs[f](remove_prefix(query, f).strip(), update, user)
     else:
+        inline_help_dicts = [
+            {
+                "title": "SpamProtection INFO",
+                "description": "Look up a person/bot/channel/chat on @Intellivoid SpamProtection API",
+                "message_text": "Click the button below to look up a person/bot/channel/chat on @Intellivoid SpamProtection API using "
+                                "username or telegram id",
+                "thumb_urL": "https://telegra.ph/file/3ce9045b1c7faf7123c67.jpg",
+                "keyboard": ".spb ",
+            },
+            {
+                "title": "Account info on Tedeza",
+                "description": "Look up a Telegram account in Tedeza database",
+                "message_text": "Click the button below to look up a person in Tedeza database using their Telegram ID",
+                "thumb_urL": "https://telegra.ph/file/fdcf54623b142ac333217.jpg",
+                "keyboard": ".info ",
+            },
+            {
+                "title": "About",
+                "description": "Know about Tedeza",
+                "message_text": "Click the button below to get to know about Tedeza.",
+                "thumb_urL": "https://telegra.ph/file/fdcf54623b142ac333217.jpg",
+                "keyboard": ".about ",
+            },
+            {
+                "title": "Anilist",
+                "description": "Search anime and manga on AniList.co",
+                "message_text": "Click the button below to search anime and manga on AniList.co",
+                "thumb_urL": "https://telegra.ph/file/fdcf54623b142ac333217.jpg",
+                "keyboard": ".anilist ",
+            },
+        ]
+
         for ihelp in inline_help_dicts:
             results.append(
                 article(
@@ -169,11 +169,10 @@ def inlineinfo(query: str, update: Update, context: CallbackContext) -> None:
         nation_level_present = True
 
     if nation_level_present:
-        text += ' [<a href="https://t.me/{}?start=nations">?</a>]'.format(bot.username)
+        text += f' [<a href="https://t.me/{bot.username}?start=nations">?</a>]'
 
     try:
-        spamwtc = sw.get_ban(int(user.id))
-        if spamwtc:
+        if spamwtc := sw.get_ban(int(user.id)):
             text += "<b>\n\n• SpamWatched:\n</b> Yes"
             text += f"\n• Reason: <pre>{spamwtc.reason}</pre>"
             text += "\n• Appeal at @SpamWatchSupport"
@@ -196,7 +195,7 @@ def inlineinfo(query: str, update: Update, context: CallbackContext) -> None:
             hamp = status.get("results").get("spam_prediction").get("ham_prediction")
             blc = status.get("results").get("attributes").get("is_blacklisted")
             blres = status.get("results").get("attributes").get("blacklist_reason")
-            
+
             text += "\n\n<b>SpamProtection:</b>"
             # text += f"<b>\n• Private Telegram ID:</b> <code>{ptid}</code>\n"
             text += f"<b>\n• Operator:</b> <code>{op}</code>\n"
@@ -223,17 +222,16 @@ def inlineinfo(query: str, update: Update, context: CallbackContext) -> None:
         [
             [
                 InlineKeyboardButton(
-                    text="Report Error",
-                    url=f"https://t.me/TedezaSupportChat",
+                    text="Report Error", url="https://t.me/TedezaSupportChat"
                 ),
                 InlineKeyboardButton(
                     text="Search again",
                     switch_inline_query_current_chat=".info ",
                 ),
-
-            ],
+            ]
         ]
-        )
+    )
+
 
     results = [
         InlineQueryResultArticle(
@@ -260,43 +258,42 @@ def about(query: str, update: Update, context: CallbackContext) -> None:
     Built with ❤️ using python-telegram-bot v{str(__version__)}
     Running on Python {python_version()}
     """
-    results: list = []
     kb = InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    text="Support",
-                    url=f"https://t.me/TedezaSupportChat",
+                    text="Support", url="https://t.me/TedezaSupportChat"
                 ),
                 InlineKeyboardButton(
-                    text="Channel",
-                    url=f"https://t.me/Tedeza_News",
+                    text="Channel", url="https://t.me/Tedeza_News"
                 ),
-
             ],
             [
                 InlineKeyboardButton(
-                    text="My Love",
-                    url=f"https://t.me/Vrushankz",
+                    text="My Love", url="https://t.me/Vrushankz"
                 ),
                 InlineKeyboardButton(
                     text="GitHub",
                     url="https://www.github.com/Aruoto/TedezaRoBot",
                 ),
             ],
-        ])
+        ]
+    )
 
-    results.append(
 
-        InlineQueryResultArticle
-            (
+    results: list = [
+        InlineQueryResultArticle(
             id=str(uuid4()),
             title=f"About Tedeza (@{context.bot.username})",
-            input_message_content=InputTextMessageContent(about_text, parse_mode=ParseMode.MARKDOWN,
-                                                          disable_web_page_preview=True),
-            reply_markup=kb
+            input_message_content=InputTextMessageContent(
+                about_text,
+                parse_mode=ParseMode.MARKDOWN,
+                disable_web_page_preview=True,
+            ),
+            reply_markup=kb,
         )
-    )
+    ]
+
     update.inline_query.answer(results)
 
 
@@ -315,11 +312,7 @@ def spb(query: str, update: Update, context: CallbackContext) -> None:
         except IndexError:
             search = user_id
 
-        if search:
-            srdata = search
-        else:
-            srdata = user_id
-
+        srdata = search or user_id
         url = f"https://api.intellivoid.net/spamprotection/v1/lookup?query={srdata}"
         r = requests.get(url)
         a = r.json()
@@ -361,16 +354,16 @@ def spb(query: str, update: Update, context: CallbackContext) -> None:
         [
             [
                 InlineKeyboardButton(
-                    text="Report Error",
-                    url=f"https://t.me/TedezaSupportChat",
+                    text="Report Error", url="https://t.me/TedezaSupportChat"
                 ),
                 InlineKeyboardButton(
                     text="Search again",
                     switch_inline_query_current_chat=".spb ",
                 ),
+            ]
+        ]
+    )
 
-            ],
-        ])
 
     a = "the entity was not found"
     results = [
@@ -453,7 +446,7 @@ def media_query(query: str, update: Update, context: CallbackContext) -> None:
                 description = description or "N/A"
 
             if len((str(description))) > 700:
-                description = description [0:700] + "....."
+                description = description[:700] + "....."
 
             avgsc = data.get("averageScore") or "N/A"
             status = data.get("status") or "N/A"

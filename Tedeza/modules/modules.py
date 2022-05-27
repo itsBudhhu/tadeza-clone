@@ -28,7 +28,7 @@ def load(update: Update, context: CallbackContext):
     )
 
     try:
-        imported_module = importlib.import_module("Tedeza.modules." + text)
+        imported_module = importlib.import_module(f"Tedeza.modules.{text}")
     except:
         load_messasge.edit_text("Does that module even exist?")
         return
@@ -36,7 +36,7 @@ def load(update: Update, context: CallbackContext):
     if not hasattr(imported_module, "__mod_name__"):
         imported_module.__mod_name__ = imported_module.__name__
 
-    if not imported_module.__mod_name__.lower() in IMPORTED:
+    if imported_module.__mod_name__.lower() not in IMPORTED:
         IMPORTED[imported_module.__mod_name__.lower()] = imported_module
     else:
         load_messasge.edit_text("Module already loaded.")
@@ -80,7 +80,8 @@ def load(update: Update, context: CallbackContext):
         USER_SETTINGS[imported_module.__mod_name__.lower()] = imported_module
 
     load_messasge.edit_text(
-        "Successfully loaded module : <b>{}</b>".format(text), parse_mode=ParseMode.HTML
+        f"Successfully loaded module : <b>{text}</b>",
+        parse_mode=ParseMode.HTML,
     )
 
 
@@ -94,7 +95,7 @@ def unload(update: Update, context: CallbackContext):
     )
 
     try:
-        imported_module = importlib.import_module("Tedeza.modules." + text)
+        imported_module = importlib.import_module(f"Tedeza.modules.{text}")
     except:
         unload_messasge.edit_text("Does that module even exist?")
         return
